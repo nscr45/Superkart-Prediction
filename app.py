@@ -5,14 +5,14 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-print("🚀 Starting SuperKart API...")
+print("Starting SuperKart API...")
 
 # Load complete pipeline
 try:
     pipeline = joblib.load('superkart_complete_pipeline.joblib')
-    print("✅ Complete pipeline loaded successfully")
+    print("Complete pipeline loaded successfully")
 except Exception as e:
-    print(f"❌ Error loading pipeline: {e}")
+    print(f"Error loading pipeline: {e}")
     pipeline = None
 
 @app.route('/')
@@ -51,7 +51,7 @@ def predict():
                 "status": "error"
             }), 400
         
-        # ✅ CORRECTED: Dynamic feature engineering in backend
+        # Dynamic feature engineering in backend
         current_year = datetime.now().year
         
         # Calculate Store_Age dynamically
@@ -88,12 +88,12 @@ def predict():
         input_dict = {k: data[k] for k in model_features if k in data}
         input_df = pd.DataFrame([input_dict])
         
-        print(f"📊 Input data: {input_dict}")
+        print(f"Input data: {input_dict}")
         
         # Make prediction using complete pipeline
         prediction = pipeline.predict(input_df)
         
-        print(f"🎯 Prediction: ${prediction[0]:.2f}")
+        print(f"Prediction: ${prediction[0]:.2f}")
         
         return jsonify({
             "prediction": float(prediction[0]),
@@ -110,12 +110,11 @@ def predict():
         })
         
     except Exception as e:
-        print(f"❌ Prediction error: {str(e)}")
+        print(f"Prediction error: {str(e)}")
         return jsonify({
             "error": str(e),
             "status": "error"
         }), 500
 
 if __name__ == '__main__':
-    print("🌐 Starting Flask server on 0.0.0.0:7860")
     app.run(host='0.0.0.0', port=7860, debug=False)
