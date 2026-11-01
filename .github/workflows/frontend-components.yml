@@ -48,6 +48,10 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install .
 
+      - name: Inspect installed component metadata
+        working-directory: frontend
+        run: python -c "import importlib.metadata as m; d=m.distribution('superkart-ui'); print([str(p) for p in (d.files or []) if 'pyproject' in str(p)])"
+
       - name: Verify component registration
         working-directory: frontend
         run: python -c "from superkart_ui import prediction_reveal; print('React component import successful')"
