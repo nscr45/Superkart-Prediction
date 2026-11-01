@@ -6,10 +6,7 @@ export type PredictionRevealData = {
   product_id: string;
 };
 
-type Props = PredictionRevealData & {
-  detailsOpen: boolean;
-  onDetailsOpenChange: (value: boolean) => void;
-};
+type Props = PredictionRevealData;
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -22,11 +19,10 @@ export default function PredictionReveal({
   prediction,
   mrp,
   product_id,
-  detailsOpen,
-  onDetailsOpenChange,
 }: Props) {
   const [displayValue, setDisplayValue] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const multiple = useMemo(
     () => (mrp > 0 ? prediction / mrp : 0),
@@ -63,16 +59,13 @@ export default function PredictionReveal({
         <span className="sk-result-label">MODEL PREDICTION</span>
         <span className="sk-result-status">Completed</span>
       </div>
-
       <div className="sk-result-value" aria-live="polite">
         {formatCurrency(displayValue)}
       </div>
       <div className="sk-result-caption">
         Predicted sales for product <strong>{product_id}</strong>
       </div>
-
       <div className="sk-result-divider" />
-
       <div className="sk-result-support">
         <div>
           <span className="sk-support-label">Product MRP</span>
@@ -83,17 +76,15 @@ export default function PredictionReveal({
           <strong>{multiple.toFixed(2)}x</strong>
         </div>
       </div>
-
       <button
         className="sk-details-button"
         type="button"
         aria-expanded={detailsOpen}
-        onClick={() => onDetailsOpenChange(!detailsOpen)}
+        onClick={() => setDetailsOpen((open) => !open)}
       >
         {detailsOpen ? "Hide calculation note" : "View calculation note"}
         <span aria-hidden="true">{detailsOpen ? "−" : "+"}</span>
       </button>
-
       {detailsOpen && (
         <p className="sk-result-note">
           Sales / MRP is a descriptive ratio of the model prediction to the
