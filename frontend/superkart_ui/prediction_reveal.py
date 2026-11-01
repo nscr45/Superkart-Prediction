@@ -1,35 +1,20 @@
-"""React-based animated prediction result component."""
-
-from pathlib import Path
+"""React-based prediction result component registered as a package component."""
 
 import streamlit as st
 
 
-_ASSET_DIR = Path(__file__).parent / "frontend" / "build"
-
-
-def _load_inline_asset(pattern):
-    """Load exactly one Vite asset as inline component content."""
-    matches = list(_ASSET_DIR.glob(pattern))
-    if len(matches) != 1:
-        raise RuntimeError(
-            f"Expected exactly one built asset matching {pattern!r}; found {len(matches)}."
-        )
-    # The leading newline makes Streamlit treat the bundle as inline content,
-    # avoiding a runtime dependency on file-backed component asset discovery.
-    return "\n" + matches[0].read_text(encoding="utf-8")
-
-
+# Asset paths are resolved relative to asset_dir in superkart_ui/pyproject.toml.
+# Streamlit expects paths/globs here, not filesystem Path objects or file contents.
 _component = st.components.v2.component(
     "superkart-ui.prediction_reveal",
-    js=_load_inline_asset("index-*.js"),
-    css=_load_inline_asset("assets/*.css"),
+    js="index-*.js",
+    css="assets/*.css",
     html='<div class="superkart-react-root"></div>',
 )
 
 
 def prediction_reveal(prediction, mrp, product_id, run_id, key=None):
-    """Render an animated result card using values returned by the Flask API."""
+    """Render the prediction result returned by the Flask API."""
     return _component(
         key=key,
         data={
