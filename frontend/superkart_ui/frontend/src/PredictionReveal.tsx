@@ -4,6 +4,7 @@ export type PredictionRevealData = {
   prediction: number;
   mrp: number;
   product_id: string;
+  run_id: string;
 };
 
 type Props = PredictionRevealData;
@@ -19,6 +20,7 @@ export default function PredictionReveal({
   prediction,
   mrp,
   product_id,
+  run_id,
 }: Props) {
   const [displayValue, setDisplayValue] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -51,7 +53,7 @@ export default function PredictionReveal({
 
     frame = window.requestAnimationFrame(animate);
     return () => window.cancelAnimationFrame(frame);
-  }, [prediction, product_id]);
+  }, [prediction, product_id, run_id]);
 
   return (
     <section className={`sk-result-card ${revealed ? "is-revealed" : ""}`}>
