@@ -27,6 +27,9 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/superkart_ui/frontend/package.json
 
+      - name: Pin npm to the stable v10 release
+        run: npm install --global npm@10.9.4
+
       - name: Install frontend dependencies
         run: npm install
 
