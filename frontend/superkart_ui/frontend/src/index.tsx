@@ -7,7 +7,8 @@ import type {
 import PredictionReveal, { type PredictionRevealData } from "./PredictionReveal";
 import "./styles.css";
 
-const roots = new WeakMap<HTMLElement, Root>();
+type ComponentParent = HTMLElement | ShadowRoot;
+const roots = new WeakMap<ComponentParent, Root>();
 
 const PredictionRevealRoot: FrontendRenderer<
   {},
