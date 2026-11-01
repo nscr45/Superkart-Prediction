@@ -21,7 +21,7 @@ COPY --from=frontend-build /component/frontend/build ./superkart_ui/frontend/bui
 
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir -e .
+    && pip install --no-cache-dir .
 
 EXPOSE 8501
 
