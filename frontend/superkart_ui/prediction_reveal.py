@@ -23,7 +23,7 @@ def _load_inline_asset(pattern):
 _component = st.components.v2.component(
     "superkart-ui.prediction_reveal",
     js=_load_inline_asset("index-*.js"),
-    css=_load_inline_asset("*.css"),
+    css=_load_inline_asset("assets/*.css"),
     html='<div class="superkart-react-root"></div>',
 )
 
