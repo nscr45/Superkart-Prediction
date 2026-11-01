@@ -10,9 +10,9 @@ import "./styles.css";
 const roots = new WeakMap<HTMLElement, Root>();
 
 const PredictionRevealRoot: FrontendRenderer<
-  Record<string, never>,
+  {},
   PredictionRevealData
-> = (args: FrontendRendererArgs<Record<string, never>, PredictionRevealData>) => {
+> = (args: FrontendRendererArgs<{}, PredictionRevealData>) => {
   const { data, parentElement } = args;
   const mount = parentElement.querySelector<HTMLElement>(".superkart-react-root");
 
@@ -32,6 +32,7 @@ const PredictionRevealRoot: FrontendRenderer<
         prediction={data.prediction}
         mrp={data.mrp}
         product_id={data.product_id}
+        run_id={data.run_id}
       />
     </StrictMode>,
   );
