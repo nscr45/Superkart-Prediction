@@ -18,6 +18,10 @@ if "saved_predictions" not in st.session_state:
     st.session_state.saved_predictions = []
 
 MODES = ["Single Item", "Batch Prediction", "Compare Items"]
+# Synchronize navigation state when a prediction component requests a mode change.
+if st.session_state.get("workspace_mode") != st.session_state.prediction_mode:
+    st.session_state.workspace_mode = st.session_state.prediction_mode
+
 MODE_DETAILS = {
     "Single Item": ("01 / FORECAST", "Configure one product and store to estimate quarterly sales."),
     "Batch Prediction": ("02 / BATCH ANALYSIS", "Upload a dataset and generate predictions at scale."),
