@@ -1,7 +1,7 @@
 import streamlit as st
 import datetime
 import requests
-import time
+from superkart_ui import prediction_reveal
 import json
 from config.settings import PRODUCT_OPTIONS, VALIDATION_LIMITS, BACKEND_URL
 from utils.helpers import format_currency, get_business_insights
@@ -250,13 +250,11 @@ def render_single_item_prediction():
                 
                 try:
                     with st.spinner(" **Analyzing data and generating prediction...**"):
-                        progress_bar = st.progress(0)
-                        for i in range(100):
-                            time.sleep(0.01)
-                            progress_bar.progress(i + 1)
-                        
-                        response = requests.post(f"{BACKEND_URL}/predict", json=input_data, timeout=30)
-                        progress_bar.empty()
+                        response = requests.post(
+                            f"{BACKEND_URL.rstrip('/')}/predict",
+                            json=input_data,
+                            timeout=30,
+                        )
                     
                     if response.status_code == 200:
                         result = response.json()
@@ -304,29 +302,19 @@ def render_single_item_prediction():
                         # Main Result Display
                         st.markdown("###  **Revenue Forecast**")
                         
-                        metric_col1, metric_col2, metric_col3 = st.columns(3)
-                        
-                        with metric_col1:
-                            st.metric(
-                                "Predicted Sales",
-                                format_currency(prediction),
-                                delta=f"+{prediction/validated_data['product_mrp']:.1f}x MRP"
-                            )
-                        
-                        with metric_col2:
-                            st.metric(
-                                "Revenue Multiple",
-                                f"{prediction/validated_data['product_mrp']:.1f}x",
-                                delta="vs Product MRP"
-                            )
-                        
-                        with metric_col3:
-                            weekly_avg = prediction / 12
-                            st.metric(
-                                "Weekly Average",
-                                format_currency(weekly_avg),
-                                delta="Per week estimate"
-                            )
+                        prediction_reveal(
+                            prediction=prediction,
+                            mrp=validated_data["product_mrp"],
+                            product_id=validated_data["product_id"],
+                            key="single-prediction-reveal",
+                        )
+
+                        weekly_avg = prediction / 12
+                        st.metric(
+                            "Weekly Average",
+                            format_currency(weekly_avg),
+                            delta="Per week estimate",
+                        )
                         
                         # Detailed Analysis
                         st.markdown("---")
