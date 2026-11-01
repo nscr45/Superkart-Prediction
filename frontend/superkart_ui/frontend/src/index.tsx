@@ -7,17 +7,13 @@ import type {
 import PredictionReveal, { type PredictionRevealData } from "./PredictionReveal";
 import "./styles.css";
 
-type ComponentState = {
-  details_open: boolean;
-};
-
 const roots = new WeakMap<HTMLElement, Root>();
 
 const PredictionRevealRoot: FrontendRenderer<
-  ComponentState,
+  Record<string, never>,
   PredictionRevealData
-> = (args: FrontendRendererArgs<ComponentState, PredictionRevealData>) => {
-  const { data, parentElement, setStateValue } = args;
+> = (args: FrontendRendererArgs<Record<string, never>, PredictionRevealData>) => {
+  const { data, parentElement } = args;
   const mount = parentElement.querySelector<HTMLElement>(".superkart-react-root");
 
   if (!mount) {
@@ -36,8 +32,6 @@ const PredictionRevealRoot: FrontendRenderer<
         prediction={data.prediction}
         mrp={data.mrp}
         product_id={data.product_id}
-        detailsOpen={Boolean(args.data && args.theme && false) || false}
-        onDetailsOpenChange={(value) => setStateValue("details_open", value)}
       />
     </StrictMode>,
   );
