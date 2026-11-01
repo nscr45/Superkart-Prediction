@@ -1,40 +1,67 @@
 # SuperKart Prediction
 
-A retail sales prediction application built around a trained scikit-learn pipeline, a Flask prediction API, and a Streamlit application deployed on Hugging Face Spaces.
+A retail sales prediction application built around the existing trained scikit-learn pipeline, a Flask prediction API, and a Streamlit application deployed on Hugging Face Spaces.
 
 ## SuperKart 2.0 architecture
 
-- **Streamlit:** primary application framework, navigation, Python workflows, file handling, and session state.
-- **React + TypeScript:** interactive UI components embedded through Streamlit Components v2 and built with Vite.
-- **Flask:** prediction API serving the existing trained model pipeline.
-- **Hugging Face Spaces:** Docker-based hosting for the Streamlit frontend and Flask backend as separate services.
+The deployment uses **two separate Hugging Face Spaces**:
 
-React is not deployed as a separate application. The frontend component bundle is compiled during the Streamlit Docker build and served by Streamlit. Python passes prediction results into React components; the React layer does not load or modify the model.
+1. **Backend Space:** Flask + Gunicorn + the trained `superkart_complete_pipeline.joblib` model. It exposes the prediction API on port 7860.
+2. **Frontend Space:** Streamlit application on port 7860. It embeds the React + TypeScript UI components and calls the backend Space through Python requests.
+
+React is not deployed as a third Space or as a separate web server. Its production bundle is compiled during the frontend Docker build and rendered inside Streamlit using Components v2.
 
 ## Repository structure
 
 ```text
 SuperKart-Prediction/
-├── backend/
+├── backend/                 # Copy contents into the backend HF Space
 │   ├── app.py
 │   ├── Dockerfile
 │   ├── requirements.txt
-│   ├── tests/
+│   ├── README.md
 │   └── superkart_complete_pipeline.joblib
-├── frontend/
+├── frontend/                # Copy contents into the frontend HF Space
 │   ├── app.py
 │   ├── Dockerfile
 │   ├── requirements.txt
+│   ├── README.md
 │   ├── components/
 │   ├── config/
 │   ├── styles/
 │   ├── utils/
 │   └── superkart_ui/
-│       ├── prediction_reveal.py
-│       └── frontend/              # React + TypeScript component source
 └── docs/
-    └── SUPERKART_2_ROADMAP.md
 ```
+
+## Deploy the backend Space first
+
+Create or use a Hugging Face Space with **Docker** as its SDK. Copy the contents of the repository's `backend/` directory into the root of that Space. Ensure the actual trained model binary is present at the Space root as `superkart_complete_pipeline.joblib`.
+
+The backend Space URL should look like:
+
+```text
+https://<your-backend-space-subdomain>.hf.space
+```
+
+Its health endpoint is `/health` and prediction endpoint is `/predict`.
+
+## Deploy the frontend Space
+
+Create or use a second Hugging Face Space with **Docker** as its SDK. Copy the contents of the repository's `frontend/` directory into the root of that Space. The Docker build installs Node, builds the React component bundle, installs the Python app, and starts Streamlit on port 7860.
+
+In the frontend Space, open **Settings → Variables and secrets** and add:
+
+- Name: `BACKEND_URL`
+- Value: the full public URL of the backend Space, without a trailing slash
+
+For the currently configured backend Space, the value is:
+
+```text
+https://sricharan451706-superkart-api-backend.hf.space
+```
+
+If the backend Space has a different URL, use that exact URL instead.
 
 ## Existing workflows
 
@@ -42,30 +69,20 @@ SuperKart-Prediction/
 2. Batch prediction from CSV, JSON, TXT, and PDF
 3. Product/store comparison
 
-## Development
+## Local development
 
 ### Backend
 
-From the `backend` directory:
+From `backend/`:
 
 ```bash
 pip install -r requirements.txt
 python app.py
 ```
 
-Run API contract tests:
+### Frontend
 
-```bash
-cd backend
-pip install pytest
-pytest -q
-```
-
-### Streamlit + React frontend
-
-The frontend requires Python 3.10+ and Node.js 24+.
-
-From the `frontend` directory:
+From `frontend/`:
 
 ```bash
 pip install -r requirements.txt
@@ -77,22 +94,10 @@ pip install .
 streamlit run app.py
 ```
 
-For component development, run `npm run dev` in the component frontend directory while Streamlit runs in a second terminal.
-
-## Hugging Face deployment
-
-The frontend Space uses the Docker SDK and listens on port 8501. Its Docker build compiles the React component bundle with Node 24, installs the Python component package, and starts Streamlit. The backend Space remains a separate Flask/Gunicorn service on port 7860.
-
-Configure the backend URL through the frontend configuration and keep it aligned with the deployed Flask Space.
-
-## Project plan
-
-See [SuperKart 2.0 Implementation Roadmap](docs/SUPERKART_2_ROADMAP.md) for the staged implementation and release acceptance criteria.
-
 ## Model and data integrity
 
 - The existing trained pipeline remains the prediction source.
 - The React component layer contains presentation logic only.
-- Charts and metrics must use real prediction outputs or clearly labelled calculations.
-- Do not present Sales/MRP as profit margin or model confidence.
+- The frontend does not need a copy of the model.
+- Sales/MRP is a descriptive ratio, not profit margin or model confidence.
 - No emojis are used in the application UI.
