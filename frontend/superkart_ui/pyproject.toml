@@ -1,7 +1,23 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "superkart-ui"
 version = "0.1.0"
+description = "SuperKart Streamlit React components"
+requires-python = ">=3.10"
+dependencies = ["streamlit>=1.51,<2"]
 
 [[tool.streamlit.component.components]]
 name = "prediction_reveal"
 asset_dir = "frontend/build"
+
+[tool.setuptools.packages.find]
+include = ["superkart_ui*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+superkart_ui = ["frontend/build/**/*", "pyproject.toml"]
