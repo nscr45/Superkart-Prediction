@@ -306,6 +306,7 @@ def render_single_item_prediction():
                             prediction=prediction,
                             mrp=validated_data["product_mrp"],
                             product_id=validated_data["product_id"],
+                            run_id=datetime.datetime.now().isoformat(),
                             key="single-prediction-reveal",
                         )
 
