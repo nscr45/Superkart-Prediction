@@ -4,20 +4,25 @@ This package contains Streamlit Components v2 built with React and TypeScript.
 
 ## Local development
 
-From the `frontend` directory:
+From the `frontend` directory, build the component assets and install the Python package as a regular package so Streamlit can discover its component metadata:
 
 ```bash
-python -m pip install -e .
 cd superkart_ui/frontend
 npm install
+npm run build
+cd ../..
+python -m pip install .
+streamlit run app.py
+```
+
+For active React development, keep the Streamlit app running in a second terminal and use the Vite watcher:
+
+```bash
+cd superkart_ui/frontend
 npm run dev
 ```
 
-In a second terminal, run Streamlit from the `frontend` directory:
-
-```bash
-streamlit run app.py
-```
+Refresh the Streamlit page after Vite rebuilds the component.
 
 ## Production build
 
@@ -25,7 +30,7 @@ The Hugging Face Docker build installs Node 24, runs the Vite production build, 
 
 ```bash
 cd superkart_ui/frontend
-npm ci
+npm install
 npm run build
 ```
 
