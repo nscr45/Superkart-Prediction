@@ -72,3 +72,21 @@ def test_predict_reports_unavailable_model(monkeypatch):
 
     assert response.status_code == 500
     assert response.get_json()["error"] == "Pipeline not loaded"
+
+
+def test_predict_rejects_non_numeric_features(monkeypatch):
+    monkeypatch.setattr(backend, "pipeline", StubPipeline())
+    payload = valid_payload()
+    payload["Product_MRP"] = "not-a-number"
+    response = backend.app.test_client().post("/predict", json=payload)
+
+    assert response.status_code == 400
+    assert response.get_json()["error"] == "Product_MRP must be a valid number"
+
+
+def test_predict_rejects_non_object_json(monkeypatch):
+    monkeypatch.setattr(backend, "pipeline", StubPipeline())
+    response = backend.app.test_client().post("/predict", json=[valid_payload()])
+
+    assert response.status_code == 400
+    assert response.get_json()["status"] == "error"
