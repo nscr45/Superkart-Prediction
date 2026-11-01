@@ -13,17 +13,23 @@ st.set_page_config(**PAGE_CONFIG)
 st.markdown(get_custom_css(), unsafe_allow_html=True)
 
 # Keep UI state in Streamlit's main execution thread.
+MODES = ["Single Item", "Batch Prediction", "Compare Items"]
+
 if "prediction_mode" not in st.session_state:
     st.session_state.prediction_mode = "Single Item"
 
+if "workspace_mode" not in st.session_state:
+    st.session_state.workspace_mode = st.session_state.prediction_mode
+
+# Apply navigation requests before the radio widget is instantiated.
+# Never overwrite a direct radio selection during a rerun.
+pending_mode = st.session_state.pop("pending_workspace_mode", None)
+if pending_mode in MODES:
+    st.session_state.workspace_mode = pending_mode
+    st.session_state.prediction_mode = pending_mode
+
 if "saved_predictions" not in st.session_state:
     st.session_state.saved_predictions = []
-
-MODES = ["Single Item", "Batch Prediction", "Compare Items"]
-
-# Synchronize navigation state when a prediction component requests a mode change.
-if st.session_state.get("workspace_mode") != st.session_state.prediction_mode:
-    st.session_state.workspace_mode = st.session_state.prediction_mode
 
 MODE_DETAILS = {
     "Single Item": (
@@ -66,7 +72,6 @@ with st.sidebar:
 
     if selected_mode != st.session_state.prediction_mode:
         st.session_state.prediction_mode = selected_mode
-        st.rerun()
 
     st.markdown("---")
     st.markdown("#### SYSTEM STATUS")
