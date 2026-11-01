@@ -72,7 +72,7 @@ with st.sidebar:
     if saved:
         saved_df = pd.DataFrame(saved)
         with st.expander("View saved results"):
-            st.dataframe(saved_df, use_container_width=True, hide_index=True)
+            st.dataframe(saved_df, use_container_width=True)
             st.download_button(
                 "Export saved results",
                 data=saved_df.to_csv(index=False),
