@@ -1,19 +1,30 @@
----
-title: Superkart Frontend Ui
-emoji: 🚀
-colorFrom: red
-colorTo: red
-sdk: docker
-app_port: 8501
-tags:
-- streamlit
-pinned: false
-short_description: Streamlit template space
----
+# SuperKart Frontend
 
-# Welcome to Streamlit!
+Streamlit frontend for the SuperKart retail sales prediction application.
 
-Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
+## Architecture
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+- Streamlit provides the application shell, navigation, Python workflows, uploads, and session state.
+- React and TypeScript provide embedded interactive components through Streamlit Components v2.
+- The frontend sends prediction requests to the separately deployed Flask backend.
+- The trained model is not stored or loaded by this frontend.
+
+## Configuration
+
+Set the backend service URL using the `BACKEND_URL` environment variable. The default is the current SuperKart backend URL.
+
+## Development
+
+From this directory:
+
+```bash
+pip install -r requirements.txt
+cd superkart_ui/frontend
+npm install
+npm run build
+cd ../..
+pip install .
+streamlit run app.py
+```
+
+The React production bundle is generated during the Docker build. A separate React server is not required at runtime.

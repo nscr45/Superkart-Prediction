@@ -1,0 +1,10 @@
+.git
+.gitignore
+__pycache__
+*.py[cod]
+.pytest_cache
+.venv
+venv
+superkart_ui/frontend/node_modules
+superkart_ui/frontend/build
+.DS_Store
