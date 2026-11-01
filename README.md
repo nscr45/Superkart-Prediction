@@ -69,11 +69,11 @@ From the `frontend` directory:
 
 ```bash
 pip install -r requirements.txt
-pip install -e .
 cd superkart_ui/frontend
 npm install
 npm run build
 cd ../..
+pip install .
 streamlit run app.py
 ```
 
