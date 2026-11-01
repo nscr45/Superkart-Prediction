@@ -215,12 +215,9 @@ def display_batch_results(original_df, results_df):
                 st.session_state.batch_comparison_data = saved_df
                 st.session_state.show_batch_comparison = True
                 
-                #This triggers the sidebar radio to switch
-                st.session_state.prediction_mode = 'Compare Items'
-                
-                st.success(f"Switching to Compare Items tab with {len(saved_df)} predictions...")
-                
-                #Rerun triggers the radio button update
+                # Queue navigation for app.py to apply before the radio widget
+                # is created on the next rerun.
+                st.session_state.pending_workspace_mode = "Compare Items"
                 st.rerun()
         
         with col_info:
