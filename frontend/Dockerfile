@@ -1,6 +1,7 @@
 FROM node:24-alpine AS frontend-build
 
 WORKDIR /component/frontend
+RUN npm install --global npm@10.9.4
 COPY superkart_ui/frontend/package*.json ./
 RUN npm install
 COPY superkart_ui/frontend/ ./
