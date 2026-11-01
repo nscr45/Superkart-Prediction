@@ -1,17 +1,14 @@
----
-title: SuperKart Prediction API
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # SuperKart Prediction API
 
-Flask API for the SuperKart trained sales prediction pipeline. This is the backend Space. The Streamlit frontend runs in a separate Space and sends server-to-server HTTP requests to this API.
+Flask API for the SuperKart trained sales prediction pipeline.
 
-## Required repository files
+## API endpoints
 
-Keep these files at the root of this Space:
+- `GET /`: service information
+- `GET /health`: API and model health
+- `POST /predict`: returns the sales prediction
+
+## Required runtime files
 
 - `app.py`
 - `Dockerfile`
@@ -20,10 +17,4 @@ Keep these files at the root of this Space:
 
 The model file must be the actual trained joblib binary, not a Git LFS pointer text file.
 
-## API endpoints
-
-- `GET /`: service information
-- `GET /health`: API and model health
-- `POST /predict`: returns the sales prediction
-
-The Docker container listens on port 7860.
+The API listens on port 7860 when run in its container. The Streamlit frontend is maintained and deployed separately.
