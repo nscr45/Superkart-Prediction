@@ -11,7 +11,7 @@ _component = st.components.v2.component(
 )
 
 
-def prediction_reveal(prediction, mrp, product_id, key=None):
+def prediction_reveal(prediction, mrp, product_id, run_id, key=None):
     """Render an animated result card using values returned by the Flask API."""
     return _component(
         key=key,
@@ -19,5 +19,6 @@ def prediction_reveal(prediction, mrp, product_id, key=None):
             "prediction": float(prediction),
             "mrp": float(mrp),
             "product_id": str(product_id),
+            "run_id": str(run_id),
         },
     )
