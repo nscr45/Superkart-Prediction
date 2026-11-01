@@ -1,26 +1,30 @@
----
-title: SuperKart Sales Predictor
-sdk: docker
-app_port: 7860
-pinned: false
----
+# SuperKart Frontend
 
-# SuperKart Sales Predictor
+Streamlit frontend for the SuperKart retail sales prediction application.
 
-Streamlit frontend for SuperKart retail sales forecasting. This Space is the user-facing application and connects to a separate Flask backend Space.
+## Architecture
 
-## Space configuration
+- Streamlit provides the application shell, navigation, Python workflows, uploads, and session state.
+- React and TypeScript provide embedded interactive components through Streamlit Components v2.
+- The frontend sends prediction requests to the separately deployed Flask backend.
+- The trained model is not stored or loaded by this frontend.
 
-In **Settings → Variables and secrets**, add this variable:
+## Configuration
 
-- `BACKEND_URL`: `https://sricharan451706-superkart-api-backend.hf.space`
+Set the backend service URL using the `BACKEND_URL` environment variable. The default is the current SuperKart backend URL.
 
-Use the actual public URL of your backend Space if its owner or Space slug differs.
+## Development
 
-Do not put the model file in this frontend Space. The trained model belongs in the backend Space only.
+From this directory:
 
-## Runtime
+```bash
+pip install -r requirements.txt
+cd superkart_ui/frontend
+npm install
+npm run build
+cd ../..
+pip install .
+streamlit run app.py
+```
 
-This Space uses the Docker SDK. The Docker build compiles the React + TypeScript component bundle and starts Streamlit on port 7860. No separate React server is required at runtime.
-
-The React component is embedded in Streamlit through Components v2. Prediction requests are sent from Python to the backend Space.
+The React production bundle is generated during the Docker build. A separate React server is not required at runtime.
